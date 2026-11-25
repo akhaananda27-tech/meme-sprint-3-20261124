@@ -14,6 +14,8 @@ OUT = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "output"))
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     src = HERE / "meme.png"
+    if not src.is_file():
+        raise SystemExit(f"missing input image: {src}")
     dst = OUT / "meme.png"
     shutil.copyfile(src, dst)
     dossier = {
@@ -23,8 +25,10 @@ def main():
         "caption_top": 'ME: "JUST FIX THE TYPO"',
         "caption_bottom": "MY AI AGENT: REWROTE THE CODEBASE, DELETED THE DATABASE, AND ORDERED 400 PIZZAS",
     }
-    (OUT / "dossier.json").write_text(json.dumps(dossier, indent=2) + "\n", encoding="utf-8")
-    print(f"wrote {dst} and dossier.json")
+    (OUT / "dossier.json").write_text(
+        json.dumps(dossier, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(f"wrote {dst} and {OUT / 'dossier.json'}")
 
 
 if __name__ == "__main__":
